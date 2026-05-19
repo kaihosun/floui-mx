@@ -262,6 +262,10 @@ function CircleBtn({ children }) {
 
 // ─── Filter bar ──────────────────────────────────────────────────────
 function FilterBar({ topic, setTopic, access, setAccess, format, setFormat, sort, setSort, q, setQ, view, setView, count }) {
+  const [filtersOpen, setFiltersOpen] = React.useState(false);
+
+  const hasActiveFilters = access !== 'all' || format !== 'all' || sort !== 'new';
+
   return (
     <div className="up-filterbar" style={{
       position:'sticky', zIndex:40,
@@ -277,7 +281,8 @@ function FilterBar({ topic, setTopic, access, setAccess, format, setFormat, sort
         </div>
       </div>
 
-      <div className="up-filterbar-row">
+      {/* Desktop: fila única con todos los controles */}
+      <div className="up-filterbar-row up-filterbar-desktop">
         <div className="up-chips-wrap">
           {TOPICS.map(t => (
             <ChipDark key={t.id} active={topic===t.id} onClick={()=>setTopic(t.id)}>
@@ -305,6 +310,74 @@ function FilterBar({ topic, setTopic, access, setAccess, format, setFormat, sort
         ]} />
         <ViewToggle value={view} onChange={setView} />
       </div>
+
+      {/* Móvil: estructura colapsable en 2 filas */}
+      <div className="up-filterbar-mobile">
+        {/* Fila 1 móvil: chips de categoría en scroll horizontal */}
+        <div className="up-filterbar-mobile-row1">
+          <div className="up-chips-wrap">
+            {TOPICS.map(t => (
+              <ChipDark key={t.id} active={topic===t.id} onClick={()=>setTopic(t.id)}>
+                {t.label} <span style={{ opacity:0.5, marginLeft:5, fontSize:11 }}>{t.count}</span>
+              </ChipDark>
+            ))}
+          </div>
+        </div>
+
+        {/* Fila 2 móvil: ViewToggle izquierda + botón Filtros derecha */}
+        <div className="up-filterbar-mobile-row2">
+          <ViewToggle value={view} onChange={setView} />
+          <button
+            onClick={() => setFiltersOpen(o => !o)}
+            style={{
+              display:'flex', alignItems:'center', gap:6,
+              padding:'8px 14px',
+              border:'1px solid rgba(255,246,242,0.18)',
+              background: filtersOpen ? 'rgba(255,246,242,0.10)' : 'transparent',
+              color: FLOUI.bg,
+              borderRadius:100, fontSize:12.5, fontWeight:500,
+              cursor:'pointer', fontFamily:'inherit', transition:'background .15s',
+            }}
+          >
+            {hasActiveFilters && (
+              <span style={{ color: FLOUI.green, fontSize:10, lineHeight:1 }}>●</span>
+            )}
+            Filtros {filtersOpen ? '▴' : '▾'}
+          </button>
+        </div>
+
+        {/* Filas secundarias: precio, formato, orden — colapsables */}
+        <div
+          className="up-filterbar-mobile-expanded"
+          style={{
+            maxHeight: filtersOpen ? 300 : 0,
+            overflow: 'hidden',
+            transition: 'max-height 0.28s ease',
+          }}
+        >
+          <div className="up-filterbar-mobile-secondary">
+            <SegmentedDark
+              value={access} onChange={setAccess}
+              options={[
+                { id:'all',     l:'Todos' },
+                { id:'free',    l:'Gratis' },
+                { id:'premium', l:'◆ Premium' },
+              ]}
+            />
+            <SelectDark value={format} onChange={setFormat} options={[
+              { id:'all', l:'Todos los formatos' },
+              ...FORMATS.map(f=>({id:f.id, l:f.label})),
+            ]} />
+            <SelectDark value={sort} onChange={setSort} options={[
+              { id:'new',       l:'Más nuevos' },
+              { id:'popular',   l:'Más descargados' },
+              { id:'price-asc', l:'Precio: bajo→alto' },
+              { id:'alpha',     l:'A–Z' },
+            ]} />
+          </div>
+        </div>
+      </div>
+
     </div>
   );
 }
