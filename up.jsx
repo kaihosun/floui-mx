@@ -1,4 +1,4 @@
-// floui-up.jsx — Final design. Dark mode, "Floui Up!" hero, V2 cards w/ pricing.
+// up.jsx — Final design. Dark mode, "Floui Up!" hero, V2 cards w/ pricing.
 // Inspired by Switch-Lit Library hero composition.
 
 function FlouiUp() {
