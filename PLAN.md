@@ -73,6 +73,35 @@ Del PRD §10 — construir cuando floui esté listo para lanzar:
 
 ---
 
+## Fase 5 — Floui Up (biblioteca de recursos)
+
+Página en `floui-up.html` — React 18 + Babel Standalone, fondo oscuro charcoal, biblioteca de recursos con filtros, modal lead-gen y newsletter.
+
+| # | Tarea | Detalle | Agente |
+|---|-------|---------|--------|
+| 5.1 | Backend de leads | Endpoint `POST /api/leads` — body: `{ resourceId, nombre, correo, telefono, newsletter }` — integrar email transaccional (Resend o similar) | `backend` |
+| 5.2 | Recursos dinámicos | Endpoint `GET /api/recursos` → `{ resources[], topics[], formats[] }`. Shape debe coincidir 1:1 con el mock en `shared.jsx`. Reemplazar array estático con `useEffect` + `fetch` en `FlouiUp` | `backend` + `frontend` |
+| 5.3 | OG image dedicado | Crear `assets/og-floui-up.png` (1200×630) con "Floui Up!" sobre fondo charcoal. Actualizar meta tag en `floui-up.html` | diseño |
+| 5.4 | Link público desde home | Agregar en nav de `index.html` cuando el contenido sea real (1 línea) | `frontend` |
+| 5.5 | Analytics | Track de `page_view`, `recurso_click`, `lead_submit` con el mismo provider de analytics elegido en Fase 2 | `frontend` |
+| 5.6 | Lighthouse audit | Si Performance <90 por Babel Standalone, pre-compilar JSX con `npx babel` y servir como `.js` planos | `qa` |
+| 5.7 | Newsletter standalone | Conectar form del `NewsletterBlock` a lista de correo (Mailchimp, Resend, etc.) | `backend` |
+
+**Contratos definidos para Fase 5.1–5.2:**
+```
+POST /api/leads
+body: { resourceId: string, nombre: string, correo: string, telefono: string, newsletter: boolean }
+→ 200 { ok: true }
+
+GET /api/recursos
+→ 200 { resources: Resource[], topics: Topic[], formats: Format[] }
+
+Resource shape (debe coincidir con mock en shared.jsx):
+{ id, title, subtitle, topic, format, access, price, pages, downloads, accent, newish, featured }
+```
+
+---
+
 ## Cómo retomar este proyecto
 
 ```bash
