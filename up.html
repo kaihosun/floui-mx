@@ -54,6 +54,149 @@
     ::-webkit-scrollbar-track { background: var(--floui-charcoal); }
     ::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--floui-soft-dawn) 15%, transparent); border-radius: 6px; }
     ::-webkit-scrollbar-thumb:hover { background: color-mix(in srgb, var(--floui-soft-dawn) 25%, transparent); }
+
+    /* ── Responsive — mobile adaptations ── */
+
+    /* Nav */
+    .up-nav { padding: 22px 56px; }
+
+    /* Hero */
+    .up-hero { padding: 72px 56px 56px; }
+
+    /* Section horizontal padding (FeaturedRow, GridSection, ListSection, NewsletterBlock, Footer) */
+    .up-section-pad { padding-left: 56px; padding-right: 56px; }
+
+    /* FilterBar sticky offset matches nav height (~69px desktop) */
+    .up-filterbar { padding: 64px 56px 18px; top: 69px; }
+
+    /* FeaturedRow grid: 4 cols desktop */
+    .up-featured-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+
+    /* Main library grid: 4 cols desktop */
+    .up-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+
+    /* FilterBar inner chips row: wraps naturally on desktop */
+    .up-filterbar-row {
+      display: flex; gap: 16px; align-items: center; flex-wrap: wrap;
+      padding-bottom: 18px;
+      border-bottom: 1px solid rgba(255,246,242,0.08);
+    }
+    .up-chips-wrap { display: flex; gap: 6px; flex-wrap: wrap; flex: 1 1 auto; }
+
+    /* Newsletter grid: 2 cols desktop */
+    .up-newsletter-grid {
+      display: grid; grid-template-columns: 1.2fr 1fr; gap: 48px; align-items: center;
+      padding: 56px 48px;
+    }
+
+    /* Footer flex row */
+    .up-footer-row {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 24px; flex-wrap: wrap;
+    }
+
+    /* ResourceFan: visible on desktop, hidden on mobile */
+    .up-fan { display: block; }
+
+    /* Nav links: visible on desktop */
+    .up-nav-links { display: flex; gap: 24px; }
+
+    /* Nav buttons: visible on desktop */
+    .up-nav-actions { display: flex; gap: 10px; align-items: center; }
+
+    /* FeaturedRow top padding: large on desktop to clear the fan */
+    .up-featured-top { padding-top: 120px; }
+
+    /* FeaturedRow header: space-between on desktop */
+    .up-featured-header {
+      display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 22px;
+    }
+
+    /* ListSection: full grid on desktop */
+    .up-list-row {
+      display: grid;
+      grid-template-columns: 60px 1.6fr 1fr 0.6fr 0.8fr 0.7fr 100px;
+      gap: 18px; padding: 14px 18px; align-items: center;
+      cursor: pointer; transition: background .15s;
+    }
+    .up-list-header {
+      display: grid;
+      grid-template-columns: 60px 1.6fr 1fr 0.6fr 0.8fr 0.7fr 100px;
+      gap: 18px; padding: 12px 18px;
+      font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+      color: rgba(255,246,242,0.45); font-weight: 600;
+      border-bottom: 1px solid rgba(255,246,242,0.08);
+    }
+    /* Columns hidden on mobile — shown on desktop only */
+    .up-list-col-topic,
+    .up-list-col-format,
+    .up-list-col-downloads { display: block; }
+
+    /* Search box full width on mobile, max-width on desktop */
+    .up-search-box { max-width: 580px; margin: 40px auto 0; }
+
+    /* Stats row: flex row on desktop */
+    .up-stats { display: flex; gap: 24px; justify-content: center; margin-top: 24px; }
+
+    @media (max-width: 768px) {
+      /* Nav */
+      .up-nav { padding: 14px 20px; }
+      .up-nav-links { display: none; } /* collapse nav links on mobile */
+      .up-nav-actions .up-btn-login { display: none; } /* hide login, keep subscribe */
+
+      /* Hero */
+      .up-hero { padding: 40px 20px 36px; }
+
+      /* Section horizontal padding */
+      .up-section-pad { padding-left: 20px; padding-right: 20px; }
+
+      /* FilterBar */
+      .up-filterbar { padding: 20px 20px 16px; top: 57px; }
+      .up-filterbar-row { flex-direction: column; align-items: stretch; gap: 10px; }
+      .up-chips-wrap { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
+      .up-chips-wrap::-webkit-scrollbar { display: none; }
+
+      /* Featured grid: 2 cols on mobile */
+      .up-featured-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+
+      /* Main grid: 2 cols on mobile */
+      .up-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+
+      /* ResourceFan: hide on mobile (viewport too narrow) */
+      .up-fan { display: none; }
+
+      /* FeaturedRow top padding: reduce when fan is hidden */
+      .up-featured-top { padding-top: 40px; }
+
+      /* Featured header: stack vertically */
+      .up-featured-header { flex-direction: column; gap: 12px; margin-bottom: 16px; }
+
+      /* Newsletter: single column */
+      .up-newsletter-grid { grid-template-columns: 1fr; gap: 28px; padding: 32px 24px; }
+
+      /* Footer row: stack */
+      .up-footer-row { flex-direction: column; align-items: flex-start; gap: 16px; }
+
+      /* ListSection: card-style rows on mobile */
+      .up-list-header { display: none; } /* hide column headers */
+      .up-list-row {
+        display: flex; flex-direction: row; align-items: center;
+        gap: 12px; padding: 12px 16px;
+      }
+      .up-list-col-topic,
+      .up-list-col-format,
+      .up-list-col-downloads,
+      .up-list-col-price { display: none; }
+      /* title cell grows, button stays right */
+      .up-list-title { flex: 1; min-width: 0; }
+      .up-list-btn { flex-shrink: 0; }
+
+      /* Stats: allow wrap */
+      .up-stats { flex-wrap: wrap; gap: 10px 16px; }
+
+      /* Search box: full width with side margins */
+      .up-search-box { max-width: 100%; margin: 28px 0 0; }
+    }
   </style>
 
   <noscript>

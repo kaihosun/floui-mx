@@ -52,8 +52,7 @@ function FlouiUp() {
 // ─── Nav ────────────────────────────────────────────────────────────
 function NavBar() {
   return (
-    <nav style={{
-      padding:'22px 56px',
+    <nav className="up-nav" style={{
       display:'flex', justifyContent:'space-between', alignItems:'center',
       borderBottom:'1px solid rgba(255,246,242,0.08)',
       position:'sticky', top:0, zIndex:50,
@@ -62,7 +61,7 @@ function NavBar() {
       <div style={{ display:'flex', alignItems:'center', gap:36 }}>
         <img src="assets/logo-wordmark.png" alt="floui"
           style={{ height:24, filter:'invert(1) brightness(1.4)' }} />
-        <div style={{ display:'flex', gap:24, fontSize:12, letterSpacing:'0.08em', textTransform:'uppercase', opacity:0.55 }}>
+        <div className="up-nav-links" style={{ fontSize:12, letterSpacing:'0.08em', textTransform:'uppercase', opacity:0.55 }}>
           <span>Servicios</span>
           <span>Casos</span>
           <span style={{ opacity:1, color:FLOUI.green, fontWeight:500 }}>Floui Up!</span>
@@ -70,8 +69,8 @@ function NavBar() {
           <span>Contacto</span>
         </div>
       </div>
-      <div style={{ display:'flex', gap:10, alignItems:'center' }}>
-        <button style={{
+      <div className="up-nav-actions" style={{ display:'flex', gap:10, alignItems:'center' }}>
+        <button className="up-btn-login" style={{
           padding:'8px 14px', background:'transparent', color:FLOUI.bg,
           border:'1px solid rgba(255,246,242,0.18)', borderRadius:100,
           fontSize:12, letterSpacing:'0.06em', cursor:'pointer', fontFamily:'inherit',
@@ -89,8 +88,7 @@ function NavBar() {
 // ─── Hero ───────────────────────────────────────────────────────────
 function Hero({ q, setQ }) {
   return (
-    <section style={{
-      padding:'72px 56px 56px',
+    <section className="up-hero" style={{
       textAlign:'center', position:'relative', overflow:'hidden',
     }}>
       <div style={{
@@ -120,11 +118,11 @@ function Hero({ q, setQ }) {
       </p>
 
       {/* Decorative stack of resource covers — fanned out */}
-      <ResourceFan />
+      <div className="up-fan"><ResourceFan /></div>
 
       {/* Big search */}
-      <div style={{
-        maxWidth: 580, margin:'40px auto 0', position:'relative', zIndex:2,
+      <div className="up-search-box" style={{
+        position:'relative', zIndex:2,
         background:'rgba(255,246,242,0.08)', borderRadius:14,
         border:'1px solid rgba(255,246,242,0.14)',
         display:'flex', alignItems:'center', padding:'4px 6px 4px 18px',
@@ -150,8 +148,7 @@ function Hero({ q, setQ }) {
         }}>⌘ K</kbd>
       </div>
 
-      <div style={{
-        display:'flex', gap:24, justifyContent:'center', marginTop:24,
+      <div className="up-stats" style={{
         fontSize:12, opacity:0.55, position:'relative', zIndex:2,
       }}>
         <span><strong style={{ color:FLOUI.bg, opacity:1 }}>24</strong> recursos</span>
@@ -226,11 +223,8 @@ function ResourceFan() {
 // ─── Featured row ────────────────────────────────────────────────────
 function FeaturedRow({ resources, onPick }) {
   return (
-    <section style={{ padding:'120px 56px 0', position:'relative', zIndex:5 }}>
-      <div style={{
-        display:'flex', justifyContent:'space-between', alignItems:'baseline',
-        marginBottom:22,
-      }}>
+    <section className="up-section-pad up-featured-top" style={{ paddingBottom:0, position:'relative', zIndex:5 }}>
+      <div className="up-featured-header">
         <div>
           <div style={{ fontSize:11, letterSpacing:'0.16em', textTransform:'uppercase', color:FLOUI.green, fontWeight:600, marginBottom:8 }}>
             ★ Destacados de la semana
@@ -245,9 +239,7 @@ function FeaturedRow({ resources, onPick }) {
         </div>
       </div>
 
-      <div style={{
-        display:'grid', gridTemplateColumns:'repeat(4, 1fr)', gap:18,
-      }}>
+      <div className="up-featured-grid">
         {resources.slice(0,4).map(r => (
           <ResourceCard key={r.id} resource={r} onClick={()=>onPick(r)} variant="featured" />
         ))}
@@ -271,9 +263,8 @@ function CircleBtn({ children }) {
 // ─── Filter bar ──────────────────────────────────────────────────────
 function FilterBar({ topic, setTopic, access, setAccess, format, setFormat, sort, setSort, q, setQ, view, setView, count }) {
   return (
-    <div style={{
-      padding:'64px 56px 18px',
-      position:'sticky', top:69, zIndex:40,
+    <div className="up-filterbar" style={{
+      position:'sticky', zIndex:40,
       background:'rgba(38,38,38,0.92)', backdropFilter:'blur(12px)',
       marginBottom:0,
     }}>
@@ -286,11 +277,8 @@ function FilterBar({ topic, setTopic, access, setAccess, format, setFormat, sort
         </div>
       </div>
 
-      <div style={{
-        display:'flex', gap:16, alignItems:'center', flexWrap:'wrap',
-        paddingBottom:18, borderBottom:'1px solid rgba(255,246,242,0.08)',
-      }}>
-        <div style={{ display:'flex', gap:6, flexWrap:'wrap', flex:'1 1 auto' }}>
+      <div className="up-filterbar-row">
+        <div className="up-chips-wrap">
           {TOPICS.map(t => (
             <ChipDark key={t.id} active={topic===t.id} onClick={()=>setTopic(t.id)}>
               {t.label} <span style={{ opacity:0.5, marginLeft:5, fontSize:11 }}>{t.count}</span>
@@ -407,8 +395,8 @@ function ListIcon() { return (
 // ─── Grid & List ─────────────────────────────────────────────────────
 function GridSection({ resources, onPick }) {
   return (
-    <section style={{ padding:'24px 56px 48px' }}>
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(4, 1fr)', gap:18 }}>
+    <section className="up-section-pad" style={{ paddingTop:24, paddingBottom:48 }}>
+      <div className="up-grid">
         {resources.map(r => (
           <ResourceCard key={r.id} resource={r} onClick={()=>onPick(r)} />
         ))}
@@ -419,45 +407,38 @@ function GridSection({ resources, onPick }) {
 
 function ListSection({ resources, onPick }) {
   return (
-    <section style={{ padding:'24px 56px 48px' }}>
+    <section className="up-section-pad" style={{ paddingTop:24, paddingBottom:48 }}>
       <div style={{
         background:'rgba(255,246,242,0.04)',
         border:'1px solid rgba(255,246,242,0.08)',
         borderRadius:14, overflow:'hidden',
       }}>
-        <div style={{
-          display:'grid', gridTemplateColumns:'60px 1.6fr 1fr 0.6fr 0.8fr 0.7fr 100px',
-          gap:18, padding:'12px 18px',
-          fontSize:10, letterSpacing:'0.14em', textTransform:'uppercase',
-          color:'rgba(255,246,242,0.45)', fontWeight:600,
-          borderBottom:'1px solid rgba(255,246,242,0.08)',
-        }}>
+        <div className="up-list-header">
           <div></div><div>Recurso</div><div>Tema</div><div>Formato</div><div>Descargas</div><div>Precio</div><div></div>
         </div>
         {resources.map((r, i) => (
-          <div key={r.id} onClick={()=>onPick(r)} style={{
-            display:'grid', gridTemplateColumns:'60px 1.6fr 1fr 0.6fr 0.8fr 0.7fr 100px',
-            gap:18, padding:'14px 18px', alignItems:'center',
-            borderBottom: i===resources.length-1 ? 'none' : '1px solid rgba(255,246,242,0.06)',
-            cursor:'pointer', transition:'background .15s',
-          }}
+          <div key={r.id} onClick={()=>onPick(r)}
+            className="up-list-row"
+            style={{
+              borderBottom: i===resources.length-1 ? 'none' : '1px solid rgba(255,246,242,0.06)',
+            }}
             onMouseEnter={e=>e.currentTarget.style.background='rgba(255,246,242,0.05)'}
             onMouseLeave={e=>e.currentTarget.style.background='transparent'}
           >
-            <div style={{ width:48, height:64, borderRadius:5, overflow:'hidden' }}>
+            <div style={{ width:48, height:64, borderRadius:5, overflow:'hidden', flexShrink:0 }}>
               <ResourceCover resource={r} hideBadge />
             </div>
-            <div>
+            <div className="up-list-title" style={{ minWidth:0 }}>
               <div style={{ fontSize:14, fontWeight:500, marginBottom:2 }}>{r.title}</div>
               <div style={{ fontSize:11, opacity:0.5 }}>{r.subtitle}</div>
             </div>
-            <div style={{ fontSize:12, opacity:0.7 }}>{TOPICS.find(t=>t.id===r.topic).label}</div>
-            <div style={{ fontSize:11, opacity:0.6, fontFamily:'JetBrains Mono, monospace' }}>{FORMAT_LABEL[r.format]}</div>
-            <div style={{ fontSize:12, opacity:0.6, fontFamily:'JetBrains Mono, monospace' }}>↓ {r.downloads.toLocaleString()}</div>
-            <div style={{ fontSize:13, fontWeight:600, color: r.access==='premium' ? FLOUI.green : FLOUI.bg }}>
+            <div className="up-list-col-topic" style={{ fontSize:12, opacity:0.7 }}>{TOPICS.find(t=>t.id===r.topic).label}</div>
+            <div className="up-list-col-format" style={{ fontSize:11, opacity:0.6, fontFamily:'JetBrains Mono, monospace' }}>{FORMAT_LABEL[r.format]}</div>
+            <div className="up-list-col-downloads" style={{ fontSize:12, opacity:0.6, fontFamily:'JetBrains Mono, monospace' }}>↓ {r.downloads.toLocaleString()}</div>
+            <div className="up-list-col-price" style={{ fontSize:13, fontWeight:600, color: r.access==='premium' ? FLOUI.green : FLOUI.bg }}>
               {r.access==='premium' ? formatPrice(r.price) : 'Gratis'}
             </div>
-            <button style={{
+            <button className="up-list-btn" style={{
               padding:'7px 12px', background: r.access==='premium' ? FLOUI.green : 'transparent',
               color: r.access==='premium' ? FLOUI.ink : FLOUI.bg,
               border: r.access==='premium' ? 'none' : '1px solid rgba(255,246,242,0.25)',
@@ -560,11 +541,10 @@ function ResourceCard({ resource, onClick, variant }) {
 // ─── Newsletter ──────────────────────────────────────────────────────
 function NewsletterBlock() {
   return (
-    <section style={{ padding:'80px 56px 48px' }}>
-      <div style={{
+    <section className="up-section-pad" style={{ paddingTop:80, paddingBottom:48 }}>
+      <div className="up-newsletter-grid" style={{
         background: FLOUI.green, color: FLOUI.ink, borderRadius:20,
-        padding:'56px 48px', overflow:'hidden', position:'relative',
-        display:'grid', gridTemplateColumns:'1.2fr 1fr', gap:48, alignItems:'center',
+        overflow:'hidden', position:'relative',
       }}>
         <div>
           <div style={{ fontSize:11, letterSpacing:'0.18em', textTransform:'uppercase', color:FLOUI.navy, fontWeight:700, marginBottom:14 }}>
@@ -614,15 +594,15 @@ const inpStyle = {
 // ─── Footer ──────────────────────────────────────────────────────────
 function Footer() {
   return (
-    <footer style={{
-      padding:'40px 56px 56px',
+    <footer className="up-section-pad" style={{
+      paddingTop:40, paddingBottom:56,
       borderTop:'1px solid rgba(255,246,242,0.08)',
       marginTop:24,
     }}>
-      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', gap:24, flexWrap:'wrap' }}>
+      <div className="up-footer-row">
         <img src="assets/logo-wordmark.png" alt="floui"
           style={{ height:22, filter:'invert(1) brightness(1.4)', opacity:0.7 }} />
-        <div style={{ display:'flex', gap:24, fontSize:11, letterSpacing:'0.1em', textTransform:'uppercase', opacity:0.5 }}>
+        <div style={{ display:'flex', gap:24, fontSize:11, letterSpacing:'0.1em', textTransform:'uppercase', opacity:0.5, flexWrap:'wrap' }}>
           <span>floui.mx</span>
           <span>hola@floui.mx</span>
           <span>@floui.mx</span>
