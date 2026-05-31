@@ -38,21 +38,39 @@ const FORMATS = [
   { id: 'webinar',  label: 'Webinar' },
 ];
 
-// 12 resources, alternating free / premium, varied topics + formats. Prices in MXN.
-const RESOURCES = [
-  { id:'r01', title:'Manual del flujo de marketing para tu restaurante', subtitle:'12 pasos para convertir vecinos en clientes recurrentes.', topic:'marketing', format:'pdf',      access:'free',    price:null, pages:42, downloads:1284, accent:'cream',  newish:true,  featured:true  },
-  { id:'r02', title:'Playbook de growth para PyMEs', subtitle:'Frameworks reales sin jerga de Silicon Valley.', topic:'growth',    format:'pdf',      access:'premium', price:490,  pages:68, downloads:412,  accent:'clay',   newish:true,  featured:true  },
-  { id:'r03', title:'Workbook de costos & margen', subtitle:'Pon números a tu menú. Spreadsheet incluido.', topic:'finanzas',  format:'workbook', access:'free',    price:null, pages:18, downloads:892,  accent:'butter', newish:false, featured:false },
-  { id:'r04', title:'Stack de software para operar un restaurante', subtitle:'Las 9 herramientas que sí valen lo que cuestan.', topic:'software',  format:'pdf',      access:'free',    price:null, pages:24, downloads:1576, accent:'lilac',  newish:false, featured:true  },
-  { id:'r05', title:'Curso: Email marketing que sí vende', subtitle:'4 sesiones · 1.5h · ejemplos en español.', topic:'marketing', format:'video',    access:'premium', price:1290, pages:null, downloads:308, accent:'green', newish:true, featured:true },
-  { id:'r06', title:'Checklist de apertura semanal', subtitle:'Lo que tu manager olvida los lunes.', topic:'ops',       format:'workbook', access:'free',    price:null, pages:6,  downloads:2104, accent:'peach',  newish:false, featured:false },
-  { id:'r07', title:'Webinar: cómo cobrar lo que vales', subtitle:'Con Gisell — grabado abril 2026.', topic:'growth',    format:'webinar',  access:'free',    price:null, pages:null, downloads:614, accent:'navy',  newish:true, featured:false },
-  { id:'r08', title:'Plantilla de pronóstico de ventas (12 meses)', subtitle:'Google Sheet con tu mix de canales.', topic:'finanzas',  format:'workbook', access:'premium', price:290,  pages:null, downloads:198, accent:'cream', newish:false, featured:false },
-  { id:'r09', title:'Manual de onboarding de meseros', subtitle:'Reduce rotación con 7 días bien diseñados.', topic:'ops',       format:'pdf',      access:'premium', price:390,  pages:36, downloads:142,  accent:'clay',   newish:false, featured:false },
-  { id:'r10', title:'Curso: Implementa tu primer CRM', subtitle:'Para negocios que ya no caben en WhatsApp.', topic:'software',  format:'video',    access:'premium', price:1490, pages:null, downloads:226, accent:'lilac', newish:true, featured:false },
-  { id:'r11', title:'Guía rápida: ads que no queman dinero', subtitle:'10 reglas antes de tocar Meta Ads Manager.', topic:'marketing', format:'pdf',      access:'free',    price:null, pages:14, downloads:1942, accent:'butter', newish:false, featured:false },
-  { id:'r12', title:'Workbook: tu primer dashboard de growth', subtitle:'Las 6 métricas que importan, hoja a hoja.', topic:'growth',    format:'workbook', access:'free',    price:null, pages:22, downloads:738,  accent:'green',  newish:false, featured:false },
-];
+const ACCENTS = ['cream','clay','butter','lilac','green','peach','navy'];
+
+function normalizeResource(r, i) {
+  return {
+    ...r,
+    title:    r.titulo,
+    subtitle: r.subtitulo || '',
+    topic:    r.tema,
+    format:   r.formato,
+    access:   r.acceso,
+    price:    r.precio_mxn,
+    pages:    r.paginas,
+    downloads: r.descargas,
+    newish:   r.nuevo,
+    featured: r.destacado,
+    accent:   ACCENTS[i % ACCENTS.length],
+  };
+}
+
+function useResources() {
+  const [resources, setResources] = React.useState([]);
+  const [loading, setLoading]     = React.useState(true);
+  const [error, setError]         = React.useState(null);
+
+  React.useEffect(() => {
+    fetch('/api/recursos')
+      .then(r => r.ok ? r.json() : Promise.reject(r.status))
+      .then(data => { setResources(data.map(normalizeResource)); setLoading(false); })
+      .catch(err => { setError(err); setLoading(false); });
+  }, []);
+
+  return { resources, loading, error };
+}
 
 const formatPrice = (p) => p == null ? null : `$${p.toLocaleString('es-MX')}`;
 
@@ -163,13 +181,32 @@ function hex(color, alpha) {
 
 // ---------- LeadModal — shared across all variants ----------
 function LeadModal({ resource, onClose }) {
-  const [step, setStep] = React.useState(1); // 1 = form, 2 = success
-  const [form, setForm] = React.useState({ nombre:'', correo:'', telefono:'', newsletter:true });
+  const [step, setStep]         = React.useState(1);
+  const [form, setForm]         = React.useState({ nombre:'', correo:'', telefono:'', newsletter:true });
+  const [submitting, setSubmit] = React.useState(false);
+  const [apiError, setApiError] = React.useState(null);
   if (!resource) return null;
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-    setStep(2);
+    setSubmit(true);
+    setApiError(null);
+    const body = { nombre: form.nombre, correo: form.correo, telefono: form.telefono || null, recurso_id: resource.id, newsletter_opt: form.newsletter };
+    try {
+      if (resource.access === 'free') {
+        const res = await fetch('/api/leads', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+        if (!res.ok) throw new Error();
+        setStep(2);
+      } else {
+        const res = await fetch('/api/checkout', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+        if (!res.ok) throw new Error();
+        const { init_point } = await res.json();
+        window.location.href = init_point;
+      }
+    } catch {
+      setApiError('Algo salió mal. Intenta de nuevo.');
+      setSubmit(false);
+    }
   };
 
   return (
@@ -251,14 +288,19 @@ function LeadModal({ resource, onClose }) {
                 </span>
               </label>
 
-              <button type="submit" style={{
+              {apiError && (
+                <div style={{ fontSize:13, color:'#c0392b', marginBottom:12, padding:'10px 14px', background:'#fdf0ef', borderRadius:8 }}>
+                  {apiError}
+                </div>
+              )}
+              <button type="submit" disabled={submitting} style={{
                 width:'100%', padding:'14px 18px',
-                background: FLOUI.navy, color: FLOUI.white,
+                background: submitting ? FLOUI.ink45 : FLOUI.navy, color: FLOUI.white,
                 border:0, borderRadius:8,
                 fontSize:14, fontWeight:500, letterSpacing:'0.01em',
-                cursor:'pointer',
+                cursor: submitting ? 'not-allowed' : 'pointer',
               }}>
-                {resource.access==='premium' ? 'Solicitar acceso →' : 'Enviarme el recurso →'}
+                {submitting ? 'Procesando…' : resource.access==='premium' ? 'Ir a pagar →' : 'Enviarme el recurso →'}
               </button>
               <div style={{ fontSize:11, color:FLOUI.ink45, marginTop:14, lineHeight:1.5 }}>
                 Al continuar aceptas nuestro aviso de privacidad.
@@ -345,6 +387,6 @@ function useOpenLead() { return React.useContext(LeadCtx); }
 
 // ---------- expose ----------
 Object.assign(window, {
-  FLOUI, TOPICS, FORMATS, RESOURCES, ACCENT_COLORS, FORMAT_LABEL,
-  ResourceCover, LeadModal, LeadProvider, useOpenLead, hex, formatPrice,
+  FLOUI, TOPICS, FORMATS, ACCENT_COLORS, FORMAT_LABEL,
+  ResourceCover, LeadModal, LeadProvider, useOpenLead, hex, formatPrice, useResources,
 });

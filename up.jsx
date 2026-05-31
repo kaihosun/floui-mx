@@ -3,14 +3,32 @@
 
 function FlouiUp() {
   const openLead = useOpenLead();
+  const { resources, loading } = useResources();
   const [topic, setTopic]   = React.useState('all');
   const [access, setAccess] = React.useState('all');
   const [format, setFormat] = React.useState('all');
   const [q, setQ]           = React.useState('');
   const [sort, setSort]     = React.useState('new');
   const [view, setView]     = React.useState('grid'); // grid | list
+  const [toast, setToast]   = React.useState(null);
 
-  const filtered = RESOURCES
+  React.useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const status = params.get('status');
+    if (status === 'success') {
+      setToast({ type: 'success', msg: '¡Pago exitoso! Revisa tu correo.' });
+    } else if (status === 'failure') {
+      setToast({ type: 'error', msg: 'El pago no se completó. Intenta de nuevo.' });
+    }
+  }, []);
+
+  React.useEffect(() => {
+    if (!toast) return;
+    const t = setTimeout(() => setToast(null), 5000);
+    return () => clearTimeout(t);
+  }, [toast]);
+
+  const filtered = resources
     .filter(r => topic==='all'  || r.topic===topic)
     .filter(r => access==='all' || r.access===access)
     .filter(r => format==='all' || r.format===format)
@@ -23,12 +41,35 @@ function FlouiUp() {
     return (b.newish?1:0) - (a.newish?1:0);
   });
 
-  const featured = RESOURCES.filter(r => r.featured);
+  const featured = resources.filter(r => r.featured);
+
+  if (loading) return (
+    <div style={{
+      background: FLOUI.ink, minHeight:'100vh',
+      display:'flex', alignItems:'center', justifyContent:'center',
+      height: 300,
+    }}>
+      <div style={{ color: FLOUI.bg, opacity: 0.5, fontSize: 15, fontFamily:'Inter Tight, system-ui, sans-serif' }}>
+        Cargando biblioteca…
+      </div>
+    </div>
+  );
 
   return (
     <div style={{ background: FLOUI.ink, color: FLOUI.bg, minHeight:'100vh', fontFamily:'Inter Tight, system-ui, sans-serif' }}>
+      {toast && (
+        <div style={{
+          position:'fixed', top:16, left:'50%', transform:'translateX(-50%)',
+          zIndex:999, padding:'12px 24px', borderRadius:8, fontSize:14, fontWeight:500,
+          background: toast.type === 'success' ? '#2D6A4F' : '#9B2335',
+          color: '#FFFFFF',
+          display:'flex', alignItems:'center', gap:10,
+        }}>
+          {toast.msg}
+        </div>
+      )}
       <NavBar />
-      <Hero q={q} setQ={setQ} />
+      <Hero q={q} setQ={setQ} resources={resources} />
       <FeaturedRow resources={featured} onPick={openLead} />
       <FilterBar
         topic={topic} setTopic={setTopic}
@@ -86,7 +127,7 @@ function NavBar() {
 }
 
 // ─── Hero ───────────────────────────────────────────────────────────
-function Hero({ q, setQ }) {
+function Hero({ q, setQ, resources }) {
   return (
     <section className="up-hero" style={{
       textAlign:'center', position:'relative', overflow:'hidden',
@@ -118,7 +159,7 @@ function Hero({ q, setQ }) {
       </p>
 
       {/* Decorative stack of resource covers — fanned out */}
-      <div className="up-fan"><ResourceFan /></div>
+      <div className="up-fan"><ResourceFan resources={resources} /></div>
 
       {/* Big search */}
       <div className="up-search-box" style={{
@@ -170,16 +211,10 @@ function Sparkle({ color, size=16, opacity=1 }) {
 }
 
 // Fanned arrangement of mini covers behind the search bar
-function ResourceFan() {
-  const items = [
-    { i:0, r:RESOURCES[3]  }, // lilac
-    { i:1, r:RESOURCES[5]  }, // peach
-    { i:2, r:RESOURCES[0]  }, // cream
-    { i:3, r:RESOURCES[11] }, // green
-    { i:4, r:RESOURCES[2]  }, // butter
-    { i:5, r:RESOURCES[1]  }, // clay
-    { i:6, r:RESOURCES[6]  }, // navy
-  ];
+function ResourceFan({ resources }) {
+  if (!resources || resources.length < 2) return null;
+  const slice = resources.slice(0, 7);
+  const items = slice.map((r, i) => ({ i, r }));
   const N = items.length;
   return (
     <div style={{
