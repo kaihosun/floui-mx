@@ -1,6 +1,156 @@
 // up.jsx — Final design. Dark mode, "Floui Up!" hero, V2 cards w/ pricing.
 // Inspired by Switch-Lit Library hero composition.
 
+// ─── Skeleton shimmer ────────────────────────────────────────────────
+// Injected once into <head> so keyframes are available.
+(function injectSkeletonStyles() {
+  if (document.getElementById('floui-skeleton-styles')) return;
+  const s = document.createElement('style');
+  s.id = 'floui-skeleton-styles';
+  s.textContent = `
+    @keyframes floui-shimmer {
+      0%   { background-position: -600px 0; }
+      100% { background-position:  600px 0; }
+    }
+    .sk {
+      background: #2E2E2E;
+      background-image: linear-gradient(
+        90deg,
+        #2E2E2E 0px,
+        #383838 120px,
+        #2E2E2E 240px
+      );
+      background-size: 600px 100%;
+      animation: floui-shimmer 1.4s ease-in-out infinite;
+      border-radius: 4px;
+    }
+  `;
+  document.head.appendChild(s);
+})();
+
+function SkeletonCard() {
+  return (
+    <div style={{
+      background:'rgba(255,246,242,0.04)',
+      border:'1px solid rgba(255,246,242,0.08)',
+      borderRadius:12, overflow:'hidden',
+    }}>
+      {/* Cover area */}
+      <div className="sk" style={{ height:200, borderRadius:0 }} />
+      {/* Body */}
+      <div style={{ padding:'16px 16px 18px' }}>
+        {/* Badges row */}
+        <div style={{ display:'flex', gap:6, marginBottom:10 }}>
+          <div className="sk" style={{ height:18, width:64, borderRadius:4 }} />
+          <div className="sk" style={{ height:18, width:48, borderRadius:4 }} />
+        </div>
+        {/* Title */}
+        <div className="sk" style={{ height:16, width:'88%', marginBottom:6, borderRadius:4 }} />
+        <div className="sk" style={{ height:16, width:'60%', marginBottom:14, borderRadius:4 }} />
+        {/* Subtitle */}
+        <div className="sk" style={{ height:12, width:'95%', marginBottom:4, borderRadius:4 }} />
+        <div className="sk" style={{ height:12, width:'70%', marginBottom:18, borderRadius:4 }} />
+        {/* Footer row */}
+        <div style={{ display:'flex', justifyContent:'space-between', paddingTop:12, borderTop:'1px solid rgba(255,246,242,0.06)' }}>
+          <div className="sk" style={{ height:12, width:56, borderRadius:4 }} />
+          <div className="sk" style={{ height:12, width:72, borderRadius:4 }} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LibrarySkeleton() {
+  return (
+    <div style={{ background: FLOUI.ink, minHeight:'100vh', fontFamily:'Inter Tight, system-ui, sans-serif' }}>
+      {/* Nav skeleton */}
+      <div className="up-nav" style={{
+        display:'flex', justifyContent:'space-between', alignItems:'center',
+        borderBottom:'1px solid rgba(255,246,242,0.08)',
+        position:'sticky', top:0, zIndex:50,
+        background:'rgba(38,38,38,0.85)', backdropFilter:'blur(12px)',
+      }}>
+        <div className="sk" style={{ height:24, width:80, borderRadius:4 }} />
+        <div style={{ display:'flex', gap:10 }}>
+          <div className="sk" style={{ height:32, width:100, borderRadius:100 }} />
+          <div className="sk" style={{ height:32, width:110, borderRadius:100 }} />
+        </div>
+      </div>
+
+      {/* Hero skeleton */}
+      <div className="up-hero" style={{ textAlign:'center' }}>
+        <div style={{ display:'flex', justifyContent:'center', marginBottom:18 }}>
+          <div className="sk" style={{ height:14, width:200, borderRadius:4 }} />
+        </div>
+        <div style={{ display:'flex', justifyContent:'center', marginBottom:12 }}>
+          <div className="sk" style={{ height:'clamp(72px, 11vw, 120px)', width:'clamp(260px, 40vw, 560px)', borderRadius:8 }} />
+        </div>
+        <div style={{ display:'flex', justifyContent:'center', marginBottom:10 }}>
+          <div className="sk" style={{ height:18, width:380, borderRadius:4 }} />
+        </div>
+        <div style={{ display:'flex', justifyContent:'center', marginBottom:32 }}>
+          <div className="sk" style={{ height:18, width:280, borderRadius:4 }} />
+        </div>
+        {/* Search bar skeleton */}
+        <div className="up-search-box" style={{ borderRadius:14, overflow:'hidden' }}>
+          <div className="sk" style={{ height:54, borderRadius:14 }} />
+        </div>
+        {/* Stats */}
+        <div className="up-stats" style={{ marginTop:24 }}>
+          <div className="sk" style={{ height:12, width:80, borderRadius:4 }} />
+          <div className="sk" style={{ height:12, width:100, borderRadius:4 }} />
+          <div className="sk" style={{ height:12, width:140, borderRadius:4 }} />
+        </div>
+      </div>
+
+      {/* Featured section skeleton */}
+      <section className="up-section-pad up-featured-top" style={{ paddingBottom:0 }}>
+        <div className="up-featured-header">
+          <div>
+            <div className="sk" style={{ height:12, width:180, borderRadius:4, marginBottom:10 }} />
+            <div className="sk" style={{ height:34, width:300, borderRadius:6 }} />
+          </div>
+          <div style={{ display:'flex', gap:8 }}>
+            <div className="sk" style={{ width:38, height:38, borderRadius:'50%' }} />
+            <div className="sk" style={{ width:38, height:38, borderRadius:'50%' }} />
+          </div>
+        </div>
+        <div className="up-featured-grid">
+          {[0,1,2,3].map(i => <SkeletonCard key={i} />)}
+        </div>
+      </section>
+
+      {/* Filter bar skeleton */}
+      <div className="up-filterbar" style={{
+        position:'sticky', zIndex:40,
+        background:'rgba(38,38,38,0.92)', backdropFilter:'blur(12px)',
+      }}>
+        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'baseline', marginBottom:18 }}>
+          <div className="sk" style={{ height:34, width:220, borderRadius:6 }} />
+          <div className="sk" style={{ height:14, width:80, borderRadius:4 }} />
+        </div>
+        <div className="up-filterbar-row up-filterbar-desktop" style={{ gap:8 }}>
+          {[80,72,80,68,64,56].map((w,i) => (
+            <div key={i} className="sk" style={{ height:32, width:w, borderRadius:100 }} />
+          ))}
+          <div style={{ flex:1 }} />
+          <div className="sk" style={{ height:32, width:140, borderRadius:100 }} />
+          <div className="sk" style={{ height:32, width:148, borderRadius:100 }} />
+          <div className="sk" style={{ height:32, width:120, borderRadius:100 }} />
+          <div className="sk" style={{ height:32, width:68, borderRadius:8 }} />
+        </div>
+      </div>
+
+      {/* Main grid skeleton — 8 cards */}
+      <section className="up-section-pad" style={{ paddingTop:24, paddingBottom:48 }}>
+        <div className="up-grid">
+          {[0,1,2,3,4,5,6,7].map(i => <SkeletonCard key={i} />)}
+        </div>
+      </section>
+    </div>
+  );
+}
+
 function FlouiUp() {
   const openLead = useOpenLead();
   const { resources, loading } = useResources();
@@ -43,17 +193,7 @@ function FlouiUp() {
 
   const featured = resources.filter(r => r.featured);
 
-  if (loading) return (
-    <div style={{
-      background: FLOUI.ink, minHeight:'100vh',
-      display:'flex', alignItems:'center', justifyContent:'center',
-      height: 300,
-    }}>
-      <div style={{ color: FLOUI.bg, opacity: 0.5, fontSize: 15, fontFamily:'Inter Tight, system-ui, sans-serif' }}>
-        Cargando biblioteca…
-      </div>
-    </div>
-  );
+  if (loading) return <LibrarySkeleton />;
 
   return (
     <div style={{ background: FLOUI.ink, color: FLOUI.bg, minHeight:'100vh', fontFamily:'Inter Tight, system-ui, sans-serif' }}>
@@ -103,24 +243,35 @@ function NavBar() {
         <img src="assets/logo-wordmark.png" alt="floui"
           style={{ height:24, filter:'invert(1) brightness(1.4)' }} />
         <div className="up-nav-links" style={{ fontSize:12, letterSpacing:'0.08em', textTransform:'uppercase', opacity:0.55 }}>
-          <span>Servicios</span>
-          <span>Casos</span>
-          <span style={{ opacity:1, color:FLOUI.green, fontWeight:500 }}>Floui Up!</span>
-          <span>Blog</span>
-          <span>Contacto</span>
+          {[
+            { label:'Servicios', href:'/#servicios' },
+            { label:'Casos',     href:'/#casos' },
+            { label:'Floui Up!', href:'/up', active:true },
+            { label:'Blog',      href:'/#blog' },
+            { label:'Contacto',  href:'mailto:hola@floui.mx' },
+          ].map(({ label, href, active }) => (
+            <a key={label} href={href} style={{
+              color: active ? FLOUI.green : 'inherit',
+              opacity: active ? 1 : undefined,
+              fontWeight: active ? 500 : undefined,
+              textDecoration:'none',
+            }}>{label}</a>
+          ))}
         </div>
       </div>
       <div className="up-nav-actions" style={{ display:'flex', gap:10, alignItems:'center' }}>
-        <button className="up-btn-login" style={{
+        <a href="mailto:hola@floui.mx" className="up-btn-login" style={{
           padding:'8px 14px', background:'transparent', color:FLOUI.bg,
           border:'1px solid rgba(255,246,242,0.18)', borderRadius:100,
           fontSize:12, letterSpacing:'0.06em', cursor:'pointer', fontFamily:'inherit',
-        }}>Iniciar sesión</button>
-        <button style={{
+          textDecoration:'none',
+        }}>Contacto</a>
+        <a href="#newsletter" style={{
           padding:'8px 16px', background:FLOUI.green, color:FLOUI.ink,
           border:0, borderRadius:100, fontSize:12, fontWeight:600,
           letterSpacing:'0.04em', cursor:'pointer', fontFamily:'inherit',
-        }}>Suscribirme →</button>
+          textDecoration:'none',
+        }}>Suscribirme →</a>
       </div>
     </nav>
   );
@@ -128,6 +279,7 @@ function NavBar() {
 
 // ─── Hero ───────────────────────────────────────────────────────────
 function Hero({ q, setQ, resources }) {
+  const totalDownloads = resources.reduce((acc, r) => acc + (r.downloads || 0), 0);
   return (
     <section className="up-hero" style={{
       textAlign:'center', position:'relative', overflow:'hidden',
@@ -192,11 +344,9 @@ function Hero({ q, setQ, resources }) {
       <div className="up-stats" style={{
         fontSize:12, opacity:0.55, position:'relative', zIndex:2,
       }}>
-        <span><strong style={{ color:FLOUI.bg, opacity:1 }}>24</strong> recursos</span>
+        <span><strong style={{ color:FLOUI.bg, opacity:1 }}>{resources.length}</strong> recursos</span>
         <span>·</span>
-        <span><strong style={{ color:FLOUI.bg, opacity:1 }}>12,847</strong> descargas</span>
-        <span>·</span>
-        <span><strong style={{ color:FLOUI.bg, opacity:1 }}>4,210</strong> suscritos al newsletter</span>
+        <span><strong style={{ color:FLOUI.bg, opacity:1 }}>{totalDownloads.toLocaleString('es-MX')}</strong> descargas</span>
       </div>
     </section>
   );
@@ -649,7 +799,7 @@ function ResourceCard({ resource, onClick, variant }) {
 // ─── Newsletter ──────────────────────────────────────────────────────
 function NewsletterBlock() {
   return (
-    <section className="up-section-pad" style={{ paddingTop:80, paddingBottom:48 }}>
+    <section id="newsletter" className="up-section-pad" style={{ paddingTop:80, paddingBottom:48 }}>
       <div className="up-newsletter-grid" style={{
         background: FLOUI.green, color: FLOUI.ink, borderRadius:20,
         overflow:'hidden', position:'relative',
@@ -711,10 +861,10 @@ function Footer() {
         <img src="assets/logo-wordmark.png" alt="floui"
           style={{ height:22, filter:'invert(1) brightness(1.4)', opacity:0.7 }} />
         <div style={{ display:'flex', gap:24, fontSize:11, letterSpacing:'0.1em', textTransform:'uppercase', opacity:0.5, flexWrap:'wrap' }}>
-          <span>floui.mx</span>
-          <span>hola@floui.mx</span>
-          <span>@floui.mx</span>
-          <span>Aviso de privacidad</span>
+          <a href="https://floui.mx" style={{ color:'inherit', textDecoration:'none' }}>floui.mx</a>
+          <a href="mailto:hola@floui.mx" style={{ color:'inherit', textDecoration:'none' }}>hola@floui.mx</a>
+          <a href="https://instagram.com/floui.mx" target="_blank" rel="noopener noreferrer" style={{ color:'inherit', textDecoration:'none' }}>@floui.mx</a>
+          <a href="/aviso-de-privacidad" style={{ color:'inherit', textDecoration:'none' }}>Aviso de privacidad</a>
         </div>
       </div>
     </footer>
