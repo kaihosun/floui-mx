@@ -3,7 +3,9 @@ import { spawnSync } from 'node:child_process'
 import { appendFileSync, writeFileSync, mkdirSync } from 'node:fs'
 import { resolve } from 'node:path'
 
-const ROOT = resolve(process.cwd(), '..')
+const LOG_DIR = '/tmp/floui-logs'
+const FEEDBACK_DIR = '/tmp/floui-feedback'
+const SLUG_REGEX = /^[a-z0-9-]+$/
 
 function tryHermes(message) {
   const phone = process.env.HERMES_PHONE
@@ -18,11 +20,10 @@ function tryHermes(message) {
 
 function writeLog(filename, line) {
   try {
-    const logDir = resolve(ROOT, 'logs')
-    mkdirSync(logDir, { recursive: true })
-    appendFileSync(resolve(logDir, filename), line + '\n')
+    mkdirSync(LOG_DIR, { recursive: true })
+    appendFileSync(resolve(LOG_DIR, filename), line + '\n')
   } catch (e) {
-    console.error('log write failed:', e.message)
+    console.log(`[log:${filename}] ${line}`)
   }
 }
 
@@ -47,6 +48,9 @@ export default async function handler(req, res) {
   const notes = parts.slice(2).join(' ')
 
   if (!slug) return res.status(400).json({ error: 'Missing slug' })
+  if (!SLUG_REGEX.test(slug)) {
+    return res.status(400).json({ error: 'Slug inválido' })
+  }
 
   const ts = new Date().toISOString()
 
@@ -79,12 +83,11 @@ export default async function handler(req, res) {
     if (!notes) return res.status(400).json({ error: 'Notas vacías' })
     writeLog('feedback.log', `${ts} | ${slug} | NOTAS | ${notes}`)
     try {
-      const fbDir = resolve(ROOT, 'content/feedback')
-      mkdirSync(fbDir, { recursive: true })
-      writeFileSync(resolve(fbDir, `${slug}-feedback.md`),
+      mkdirSync(FEEDBACK_DIR, { recursive: true })
+      writeFileSync(resolve(FEEDBACK_DIR, `${slug}-feedback.md`),
         `# Feedback — ${slug}\n\nFecha: ${ts}\n\n${notes}\n`)
     } catch (e) {
-      console.error('feedback file write failed:', e.message)
+      console.log(`[feedback:${slug}] ${notes}`)
     }
     tryHermes(`Feedback recibido para ${slug}. Curator notificado.`)
     return res.status(200).json({ ok: true, action: 'feedback_saved', message: 'Curator notificado' })

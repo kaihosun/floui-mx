@@ -219,6 +219,7 @@ function FlouiUp() {
         q={q} setQ={setQ}
         view={view} setView={setView}
         count={sorted.length}
+        topics={topicsWithCounts(resources)}
       />
       {view==='grid'
         ? <GridSection resources={sorted} onPick={openLead} />
@@ -446,7 +447,7 @@ function CircleBtn({ children }) {
 }
 
 // ─── Filter bar ──────────────────────────────────────────────────────
-function FilterBar({ topic, setTopic, access, setAccess, format, setFormat, sort, setSort, q, setQ, view, setView, count }) {
+function FilterBar({ topic, setTopic, access, setAccess, format, setFormat, sort, setSort, q, setQ, view, setView, count, topics }) {
   const [filtersOpen, setFiltersOpen] = React.useState(false);
 
   const hasActiveFilters = access !== 'all' || format !== 'all' || sort !== 'new';
@@ -469,7 +470,7 @@ function FilterBar({ topic, setTopic, access, setAccess, format, setFormat, sort
       {/* Desktop: fila única con todos los controles */}
       <div className="up-filterbar-row up-filterbar-desktop">
         <div className="up-chips-wrap">
-          {TOPICS.map(t => (
+          {topics.map(t => (
             <ChipDark key={t.id} active={topic===t.id} onClick={()=>setTopic(t.id)}>
               {t.label} <span style={{ opacity:0.5, marginLeft:5, fontSize:11 }}>{t.count}</span>
             </ChipDark>
@@ -501,7 +502,7 @@ function FilterBar({ topic, setTopic, access, setAccess, format, setFormat, sort
         {/* Fila 1 móvil: chips de categoría en scroll horizontal */}
         <div className="up-filterbar-mobile-row1">
           <div className="up-chips-wrap">
-            {TOPICS.map(t => (
+            {topics.map(t => (
               <ChipDark key={t.id} active={topic===t.id} onClick={()=>setTopic(t.id)}>
                 {t.label} <span style={{ opacity:0.5, marginLeft:5, fontSize:11 }}>{t.count}</span>
               </ChipDark>

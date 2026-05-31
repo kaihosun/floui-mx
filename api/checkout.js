@@ -1,8 +1,10 @@
-import { supabaseAdmin } from './_lib/supabase.js'
+import { supabase, supabaseAdmin } from './_lib/supabase.js'
 import { subscribeToLoops } from './_lib/loops.js'
-import MercadoPago, { Preference } from 'mercadopago'
+import { MercadoPagoConfig, Preference } from 'mercadopago'
 
-const mp = new MercadoPago({ accessToken: process.env.MP_ACCESS_TOKEN })
+const mp = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN })
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const SLUG_REGEX = /^[a-z0-9-]+$/
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -15,8 +17,21 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Faltan campos requeridos' })
   }
 
+  if (typeof nombre !== 'string' || nombre.length > 100) {
+    return res.status(400).json({ error: 'Nombre inválido' })
+  }
+  if (typeof correo !== 'string' || !EMAIL_REGEX.test(correo)) {
+    return res.status(400).json({ error: 'Email inválido' })
+  }
+  if (telefono != null && (typeof telefono !== 'string' || telefono.length > 20)) {
+    return res.status(400).json({ error: 'Teléfono inválido' })
+  }
+  if (typeof recurso_id !== 'string' || !SLUG_REGEX.test(recurso_id)) {
+    return res.status(400).json({ error: 'Recurso inválido' })
+  }
+
   // Obtener recurso premium
-  const { data: recurso, error: recursoError } = await supabaseAdmin
+  const { data: recurso, error: recursoError } = await supabase
     .from('recursos')
     .select('id, titulo, subtitulo, precio_mxn, acceso, portada_path')
     .eq('id', recurso_id)
@@ -55,8 +70,9 @@ export default async function handler(req, res) {
     : 'https://floui.mx'
 
   // Crear preferencia en MercadoPago
+  // SDK v2 devuelve el objeto directamente (sin envolver en { body })
   const preference = new Preference(mp)
-  const { body } = await preference.create({
+  const mpResponse = await preference.create({
     body: {
       items: [{
         title: recurso.titulo,
@@ -83,7 +99,7 @@ export default async function handler(req, res) {
   // Guardar preference_id en el lead
   await supabaseAdmin
     .from('leads')
-    .update({ mp_preference_id: body.id })
+    .update({ mp_preference_id: mpResponse.id })
     .eq('id', lead.id)
 
   // Newsletter (no bloquear si falla)
@@ -96,5 +112,5 @@ export default async function handler(req, res) {
     ).catch(console.error)
   }
 
-  return res.status(200).json({ init_point: body.init_point })
+  return res.status(200).json({ init_point: mpResponse.init_point })
 }

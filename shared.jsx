@@ -21,15 +21,24 @@ const FLOUI = {
   dusk:     '#2A2F47',
 };
 
-// ---------- Mock data ----------
+// ---------- Topic definitions (no hardcoded counts — computed dynamically) ----------
 const TOPICS = [
-  { id: 'all',       label: 'Todos',      count: 24 },
-  { id: 'marketing', label: 'Marketing',  count: 7 },
-  { id: 'software',  label: 'Software',   count: 5 },
-  { id: 'growth',    label: 'Growth',     count: 6 },
-  { id: 'ops',       label: 'Operación',  count: 4 },
-  { id: 'finanzas',  label: 'Finanzas',   count: 2 },
+  { id: 'all',       label: 'Todos'     },
+  { id: 'marketing', label: 'Marketing' },
+  { id: 'software',  label: 'Software'  },
+  { id: 'growth',    label: 'Growth'    },
+  { id: 'ops',       label: 'Operación' },
+  { id: 'finanzas',  label: 'Finanzas'  },
 ];
+
+// Returns TOPICS with a `count` field computed from the live resources array.
+function topicsWithCounts(resources) {
+  const total = resources.length;
+  return TOPICS.map(t => ({
+    ...t,
+    count: t.id === 'all' ? total : resources.filter(r => r.topic === t.id).length,
+  }));
+}
 
 const FORMATS = [
   { id: 'pdf',      label: 'Guía' },
@@ -265,7 +274,7 @@ function LeadModal({ resource, onClose }) {
               <div style={{ fontSize:11, letterSpacing:'0.14em', textTransform:'uppercase', color:FLOUI.ink45, marginBottom:14 }}>
                 {resource.access==='premium' ? 'Recurso premium · solicita acceso' : 'Recibe el recurso gratis'}
               </div>
-              <div style={{ fontFamily:'Instrument Serif, serif', fontSize:30, lineHeight:1.1, letterSpacing:'-0.02em', marginBottom:10 }}>
+              <div style={{ fontFamily:'Instrument Serif, serif', fontSize:30, lineHeight:1.1, letterSpacing:'-0.02em', marginBottom:10, color: FLOUI.ink }}>
                 Te lo enviamos al correo.
               </div>
               <div style={{ fontSize:14, color:FLOUI.ink60, lineHeight:1.55, marginBottom:24 }}>
@@ -389,4 +398,5 @@ function useOpenLead() { return React.useContext(LeadCtx); }
 Object.assign(window, {
   FLOUI, TOPICS, FORMATS, ACCENT_COLORS, FORMAT_LABEL,
   ResourceCover, LeadModal, LeadProvider, useOpenLead, hex, formatPrice, useResources,
+  topicsWithCounts,
 });

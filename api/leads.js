@@ -1,6 +1,9 @@
-import { supabaseAdmin } from './_lib/supabase.js'
+import { supabase, supabaseAdmin } from './_lib/supabase.js'
 import { sendResourceEmail } from './_lib/resend.js'
 import { subscribeToLoops } from './_lib/loops.js'
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const SLUG_REGEX = /^[a-z0-9-]+$/
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -13,8 +16,21 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Faltan campos requeridos' })
   }
 
+  if (typeof nombre !== 'string' || nombre.length > 100) {
+    return res.status(400).json({ error: 'Nombre inválido' })
+  }
+  if (typeof correo !== 'string' || !EMAIL_REGEX.test(correo)) {
+    return res.status(400).json({ error: 'Email inválido' })
+  }
+  if (telefono != null && (typeof telefono !== 'string' || telefono.length > 20)) {
+    return res.status(400).json({ error: 'Teléfono inválido' })
+  }
+  if (typeof recurso_id !== 'string' || !SLUG_REGEX.test(recurso_id)) {
+    return res.status(400).json({ error: 'Recurso inválido' })
+  }
+
   // Obtener recurso (solo free — premium usa /api/checkout)
-  const { data: recurso, error: recursoError } = await supabaseAdmin
+  const { data: recurso, error: recursoError } = await supabase
     .from('recursos')
     .select('id, titulo, acceso, archivo_path')
     .eq('id', recurso_id)

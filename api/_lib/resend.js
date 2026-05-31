@@ -2,7 +2,25 @@ import { Resend } from 'resend'
 
 export const resend = new Resend(process.env.RESEND_API_KEY)
 
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
+function escapeAttr(str) {
+  return escapeHtml(str)
+}
+
 export async function sendResourceEmail({ nombre, correo, recurso, downloadUrl, tipo }) {
+  const safeTitulo = escapeHtml(recurso.titulo)
+  const safeNombre = escapeHtml(nombre)
+  const safeDownloadHref = escapeAttr(downloadUrl)
+  const safeDownloadText = escapeHtml(downloadUrl)
+
   const subject = tipo === 'free'
     ? `Tu recurso "${recurso.titulo}" está listo`
     : `Compra confirmada — "${recurso.titulo}"`
@@ -13,7 +31,7 @@ export async function sendResourceEmail({ nombre, correo, recurso, downloadUrl, 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${subject}</title>
+  <title>${escapeHtml(subject)}</title>
 </head>
 <body style="margin:0;padding:0;background-color:#FFF6F2;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#FFF6F2;padding:40px 20px;">
@@ -35,17 +53,17 @@ export async function sendResourceEmail({ nombre, correo, recurso, downloadUrl, 
                 ${tipo === 'free' ? 'Tu descarga gratuita' : 'Compra confirmada'}
               </p>
               <h1 style="margin:0 0 24px;font-size:24px;font-weight:700;letter-spacing:-0.03em;color:#262626;line-height:1.2;">
-                ${recurso.titulo}
+                ${safeTitulo}
               </h1>
               <p style="margin:0 0 32px;font-size:15px;line-height:1.6;color:#262626;">
-                Hola ${nombre}, tu recurso está listo. El link de descarga es válido por 7 días.
+                Hola ${safeNombre}, tu recurso está listo. El link de descarga es válido por 7 días.
               </p>
 
               <!-- CTA Button -->
               <table cellpadding="0" cellspacing="0">
                 <tr>
                   <td style="background-color:#3B62AB;border-radius:8px;">
-                    <a href="${downloadUrl}"
+                    <a href="${safeDownloadHref}"
                        style="display:inline-block;padding:14px 32px;font-size:15px;font-weight:600;color:#FFFFFF;text-decoration:none;letter-spacing:-0.01em;">
                       Descargar ahora
                     </a>
@@ -55,7 +73,7 @@ export async function sendResourceEmail({ nombre, correo, recurso, downloadUrl, 
 
               <p style="margin:24px 0 0;font-size:13px;color:#262626;opacity:0.5;line-height:1.6;">
                 Si el botón no funciona, copia este link en tu navegador:<br>
-                <span style="color:#3B62AB;word-break:break-all;">${downloadUrl}</span>
+                <span style="color:#3B62AB;word-break:break-all;">${safeDownloadText}</span>
               </p>
             </td>
           </tr>

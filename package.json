@@ -5,6 +5,10 @@
   "engines": {
     "node": ">=18"
   },
+  "scripts": {
+    "test:e2e": "BASE_URL=https://floui.mx node scripts/test-e2e.js",
+    "test:e2e:local": "BASE_URL=http://localhost:3000 node scripts/test-e2e.js"
+  },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.0",
     "mercadopago": "^2.5.0",
