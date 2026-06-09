@@ -91,10 +91,12 @@ export default async function handler(req, res) {
   if (newsletter_opt) {
     subscribeToLoops({ nombre, correo, fuente: 'lead' }).catch(console.error)
 
-    supabaseAdmin.from('suscriptores').upsert(
-      { nombre, correo, fuente: 'lead' },
-      { onConflict: 'correo' }
-    ).catch(console.error)
+    ;(async () => {
+      await supabaseAdmin.from('suscriptores').upsert(
+        { nombre, correo, fuente: 'lead' },
+        { onConflict: 'correo' }
+      )
+    })().catch(console.error)
   }
 
   return res.status(200).json({ ok: true, message: 'Revisa tu correo' })
