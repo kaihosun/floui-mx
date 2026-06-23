@@ -415,7 +415,8 @@ a { color: inherit; }
   .feature-grid { grid-template-columns: 1fr; }
   .feature--wide { grid-column: auto; }
   .steps { grid-template-columns: 1fr; gap: 28px; }
-  .step { padding: 0; border-left: none; padding-left: 18px; border-left: 2px solid color-mix(in srgb, var(--floui-deep-blue) 18%, transparent); }
+  .step,
+  .step:nth-child(odd),
   .step:first-child { padding-left: 18px; border-left: 2px solid color-mix(in srgb, var(--floui-deep-blue) 18%, transparent); }
   .footer-inner { justify-content: center; text-align: center; }
   .footer-links { justify-content: center; }
