@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Un agente de IA que responde tu WhatsApp 24/7 · floui</title>
+  <meta name="description" content="Atención automática en WhatsApp con inteligencia artificial: responde dudas, agenda citas y no deja a ningún cliente esperando. Pídela en acción." />
+  <link rel="icon" type="image/png" href="./assets/logo-wordmark.png" />
+  <link rel="stylesheet" href="./assets/floui-servicios.css" />
+
+  <!-- PostHog Analytics — reemplazar POSTHOG_PROJECT_KEY con tu key de posthog.com/settings -->
+  <script>
+    !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+" (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys getNextSurveyStep onSessionId setPersonPropertiesForFlags".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+    posthog.init('phc_CE9Kfuf4T5D7vuamNgSAETQo6uHDgJ6Rs6xgu7NbpKZZ', {
+      api_host: 'https://us.i.posthog.com',
+      person_profiles: 'identified_only'
+    });
+  </script>
+</head>
+<body>
+
+  <!-- Nav ─────────────────────────────────────────────── -->
+  <nav class="nav" aria-label="Navegación principal">
+    <a href="/" aria-label="floui inicio"><img src="./assets/logo-wordmark.png" alt="floui" class="nav-logo" /></a>
+    <div class="nav-links">
+      <a class="nav-link" href="/paginas-web">Páginas web</a>
+      <a class="nav-link is-active" href="/whatsapp-ia">WhatsApp con IA</a>
+      <a class="nav-link" href="/lealtad">Lealtad</a>
+    </div>
+    <a class="nav-cta" href="https://wa.me/528115139031" target="_blank" rel="noopener noreferrer">Probar el agente</a>
+  </nav>
+
+  <!-- Bloque 1 — Hero ─────────────────────────────────── -->
+  <header class="hero hero--showcase" data-watermark="whatsapp" data-screen-label="Hero">
+    <div class="hero-content">
+      <span class="hero-badge">
+        <svg class="spark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2L17.6 13.4L29 16L17.6 18.6L16 30L14.4 18.6L3 16L14.4 13.4L16 2Z" fill="#3B62AB"/></svg>
+        Agente de IA en WhatsApp
+      </span>
+      <h1 class="hero-title">
+        Tu WhatsApp <span class="hl">responde solo</span>,<br />
+        <span class="mut">aunque tú no estés.</span>
+      </h1>
+      <p class="hero-sub">
+        Un agente de inteligencia artificial que atiende a tus clientes: responde dudas, agenda citas y no deja a nadie esperando.
+      </p>
+      <a class="btn" href="https://wa.me/528115139031" target="_blank" rel="noopener noreferrer">Quiero verlo en acción <span class="arrow">→</span></a>
+    </div>
+  </header>
+
+  <!-- Showcase — demo del agente en chat -->
+  <section class="showcase" aria-label="Demo del agente">
+    <div class="stage stage--phone reveal">
+      <div class="phone floaty" data-chat>
+        <div class="phone-screen">
+          <span class="phone-notch"></span>
+          <div class="chat">
+            <div class="chat-head">
+              <div class="chat-avatar"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2L17.6 13.4L29 16L17.6 18.6L16 30L14.4 18.6L3 16L14.4 13.4L16 2Z" fill="#DAE9C6"/></svg></div>
+              <div>
+                <div class="chat-name">Tu Negocio</div>
+                <div class="chat-status">en línea · responde al instante</div>
+              </div>
+            </div>
+            <div class="chat-body">
+              <div class="bubble in">Hola, ¿tienen mesa para 4 hoy a las 9pm?</div>
+              <div class="bubble out"><span class="meta">Agente floui</span>¡Hola! Sí, tengo lugar a las 9. ¿A nombre de quién la aparto?</div>
+              <div class="bubble in">Carlos. ¿Hay opciones sin gluten?</div>
+              <div class="bubble out"><span class="meta">Agente floui</span>Claro, Carlos. Varios platillos son sin gluten. Tu mesa queda lista a las 9pm. ¡Aquí te esperamos!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider" aria-hidden="true">
+    <span class="line"></span>
+    <svg class="spark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M16 2L17.6 13.4L29 16L17.6 18.6L16 30L14.4 18.6L3 16L14.4 13.4L16 2Z" fill="#DAE9C6" stroke="#3B62AB" stroke-width="1.2" stroke-linejoin="round"/></svg>
+    <span class="line"></span>
+  </div>
+
+  <!-- Bloque 2 — El problema ──────────────────────────── -->
+  <section class="section section--white" aria-label="El problema">
+    <div class="inner inner--narrow reveal">
+      <span class="eyebrow">
+        <svg class="spark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M16 2L17.6 13.4L29 16L17.6 18.6L16 30L14.4 18.6L3 16L14.4 13.4L16 2Z" fill="#DAE9C6" stroke="#3B62AB" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        El problema
+      </span>
+      <p class="statement">
+        La mayoría de tus clientes te escribe por WhatsApp.
+        <span class="dim">Y el que tarda en contestar, pierde.</span>
+      </p>
+      <p class="statement-sub">
+        Mensajes a media noche, en domingo, mientras atiendes a otro: cada uno que se queda sin respuesta se va con el que sí contestó.
+      </p>
+    </div>
+  </section>
+
+  <!-- Bloque 3 — Qué hace (Dawn Green) ────────────────── -->
+  <section class="section section--green" aria-label="Qué hace por ti">
+    <div class="inner reveal">
+      <span class="eyebrow">
+        <svg class="spark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2L17.6 13.4L29 16L17.6 18.6L16 30L14.4 18.6L3 16L14.4 13.4L16 2Z" fill="#3B62AB"/></svg>
+        Lo que hace por ti
+      </span>
+      <h2 class="h-section">Lo que hace por ti, todo el día.</h2>
+      <div class="feature-grid">
+        <div class="feature">
+          <svg class="spark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2L17.6 13.4L29 16L17.6 18.6L16 30L14.4 18.6L3 16L14.4 13.4L16 2Z" fill="#3B62AB"/></svg>
+          <p><strong>Responde al instante,</strong> de día y de noche.</p>
+        </div>
+        <div class="feature">
+          <svg class="spark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2L17.6 13.4L29 16L17.6 18.6L16 30L14.4 18.6L3 16L14.4 13.4L16 2Z" fill="#3B62AB"/></svg>
+          <p><strong>Contesta lo de siempre:</strong> precios, horarios, ubicación, servicios.</p>
+        </div>
+        <div class="feature">
+          <svg class="spark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2L17.6 13.4L29 16L17.6 18.6L16 30L14.4 18.6L3 16L14.4 13.4L16 2Z" fill="#3B62AB"/></svg>
+          <p><strong>Agenda citas</strong> o te pasa al cliente ya listo para cerrar.</p>
+        </div>
+        <div class="feature">
+          <svg class="spark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2L17.6 13.4L29 16L17.6 18.6L16 30L14.4 18.6L3 16L14.4 13.4L16 2Z" fill="#3B62AB"/></svg>
+          <p><strong>Habla como tu negocio,</strong> con tu información y tu tono.</p>
+        </div>
+        <div class="feature feature--wide">
+          <svg class="spark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2L17.6 13.4L29 16L17.6 18.6L16 30L14.4 18.6L3 16L14.4 13.4L16 2Z" fill="#3B62AB"/></svg>
+          <p><strong>Te avisa</strong> cuando algo necesita que entres tú.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bloque 4 — Por qué es distinto ──────────────────── -->
+  <section class="section" aria-label="Por qué es distinto">
+    <div class="inner reveal">
+      <span class="eyebrow">
+        <svg class="spark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M16 2L17.6 13.4L29 16L17.6 18.6L16 30L14.4 18.6L3 16L14.4 13.4L16 2Z" fill="#DAE9C6" stroke="#3B62AB" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        Por qué es distinto
+      </span>
+      <h2 class="h-section">No es un menú de robot.</h2>
+      <div class="callout">
+        <p class="statement" style="font-size:clamp(20px,2.6vw,28px);">
+          No es ese <span class="strike">"escribe 1 para ventas, 2 para soporte"</span> que a nadie le gusta.
+        </p>
+        <p class="statement-sub" style="margin-top:20px;">
+          Es un agente que entiende lo que el cliente quiere decir, aunque lo escriba mal o lo pregunte raro, y le responde de verdad.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bloque 5 — Cómo funciona ────────────────────────── -->
+  <section class="section section--white" aria-label="Cómo funciona">
+    <div class="inner reveal">
+      <span class="eyebrow">
+        <svg class="spark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M16 2L17.6 13.4L29 16L17.6 18.6L16 30L14.4 18.6L3 16L14.4 13.4L16 2Z" fill="#DAE9C6" stroke="#3B62AB" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        Cómo funciona
+      </span>
+      <h2 class="h-section">Listo en cuatro pasos.</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <h3 class="step-title">Nos das la info</h3>
+          <p class="step-body">Precios, servicios, horarios, las preguntas de siempre.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <h3 class="step-title">Lo entrenamos</h3>
+          <p class="step-body">Para que hable como tu negocio, no como un robot genérico.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <h3 class="step-title">Lo conectamos</h3>
+          <p class="step-body">A tu WhatsApp, el número que ya usas.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">04</div>
+          <h3 class="step-title">Empieza a contestar</h3>
+          <p class="step-body">Y tú ves cada conversación.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bloque 6 — Para quién ───────────────────────────── -->
+  <section class="section audience" aria-label="Para quién">
+    <div class="inner inner--narrow reveal">
+      <span class="eyebrow" style="justify-content:center;">
+        <svg class="spark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M16 2L17.6 13.4L29 16L17.6 18.6L16 30L14.4 18.6L3 16L14.4 13.4L16 2Z" fill="#DAE9C6" stroke="#3B62AB" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        Para quién
+      </span>
+      <h2 class="h-section">Para cualquier negocio que vive en WhatsApp.</h2>
+      <p class="body">Clínicas que agendan citas, restaurantes y cafés que reciben pedidos y reservas, y todo negocio donde el cliente escribe primero.</p>
+    </div>
+  </section>
+
+  <!-- Bloque 7 — CTA final ────────────────────────────── -->
+  <section class="section section--white cta-final" aria-label="Probar el agente">
+    <div class="inner reveal">
+      <span class="eyebrow" style="justify-content:center;">
+        <svg class="spark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M16 2L17.6 13.4L29 16L17.6 18.6L16 30L14.4 18.6L3 16L14.4 13.4L16 2Z" fill="#DAE9C6" stroke="#3B62AB" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        Pruébalo
+      </span>
+      <h2 class="cta-title">La forma más rápida de entenderlo es probarlo.</h2>
+      <p class="cta-sub">Escríbenos por WhatsApp y deja que el agente te atienda. Así de bien va a atender a tus clientes.</p>
+      <a class="btn" href="https://wa.me/528115139031" target="_blank" rel="noopener noreferrer">Probar el agente <span class="arrow">→</span></a>
+    </div>
+  </section>
+
+  <!-- Footer ──────────────────────────────────────────── -->
+  <footer class="footer" aria-label="Footer">
+    <div class="footer-rule" aria-hidden="true"></div>
+    <div class="footer-inner">
+      <img src="./assets/logo-wordmark.png" alt="floui" class="footer-logo" />
+      <nav class="footer-links" aria-label="Links">
+        <a href="https://floui.mx">floui.mx</a>
+        <a href="mailto:hola@floui.mx">hola@floui.mx</a>
+        <a href="https://instagram.com/floui.mx" target="_blank" rel="noopener noreferrer">@floui.mx</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="./assets/mockups.js"></script>
+  <script src="./assets/reveal.js"></script>
+</body>
+</html>
